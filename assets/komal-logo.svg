@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="512" height="512" role="img" aria-label="Komal logo">
+  <rect width="40" height="40" rx="11" fill="#2B1828"/>
+  <path d="M12 8.5V30M22 15.5L12 23.5M15.8 20.5L23 30" fill="none" stroke="#F5EFE4" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="28.4" cy="28.4" r="2.7" fill="#E0561C"/>
+</svg>
