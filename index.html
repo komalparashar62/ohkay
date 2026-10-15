@@ -474,6 +474,101 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
 .site-footer .wordmark { font-size: 1.5rem; color: var(--plum); }
 .site-footer .brand-mark { width: 30px; height: 30px; }
 
+/* ===== PHONES: less reading, more swiping =====
+   Long stacked lists become swipeable cards, repeated text is dropped, and a "Let's talk" button stays in reach. */
+.car-dots, .pm-desc-m, .m-cta { display: none; }
+@media (max-width: 640px) {
+  .section { padding-block: 3.75rem; }
+  .section-head { gap: 1rem; }
+  .section-head p { font-size: 1.0625rem; }
+  .hero { padding-block: 1.25rem 2.5rem; }
+  .hero h1 { font-size: clamp(2.6rem, 11vw, 3.4rem); }
+  .hero-intro { gap: 1.25rem; margin-top: 1.5rem; }
+  .hero-copy { gap: 1.25rem; }
+  .hero-copy p { font-size: 1.0625rem; }
+  .availability { font-size: .8125rem; }
+  .canvas-stage { margin-top: 2rem; }
+  .canvas-top { padding: .7rem .8rem; }
+  .canvas-area { min-height: 0; padding: 1.25rem .9rem; }
+  .c-flow { padding: 1rem; }
+  .c-ui { padding: 1.1rem; }
+  .equation { gap: .35rem .5rem; padding: .75rem .8rem; }
+  .eq-item { font-size: .8125rem; gap: .35rem; }
+  .equation .plus { font-size: 1.1rem; }
+
+  /* swipeable rows */
+  [data-carousel] {
+    display: grid; grid-auto-flow: column; grid-template-columns: none; gap: 12px;
+    overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+    margin-left: calc(-1 * max(var(--gutter-x), env(safe-area-inset-left, 0px)));
+    margin-right: calc(-1 * max(var(--gutter-x), env(safe-area-inset-right, 0px)));
+    padding-left: max(var(--gutter-x), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--gutter-x), env(safe-area-inset-right, 0px));
+    scroll-padding-inline: max(var(--gutter-x), env(safe-area-inset-left, 0px));
+  }
+  [data-carousel]::-webkit-scrollbar { display: none; }
+  [data-carousel] > * { scroll-snap-align: start; }
+  .car-dots { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 1rem; }
+  .car-dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--line-strong); transition: width .3s var(--ease), background-color .3s var(--ease); }
+  .car-dots i.on { width: 20px; background: var(--orange); }
+
+  /* design expertise as cards */
+  .offer-list { grid-auto-columns: 86%; margin-top: 2rem; border-top: 0; padding-top: 0; padding-bottom: 4px; }
+  .offer { grid-template-columns: minmax(0, 1fr); gap: 1rem; align-content: start; align-items: start; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 1rem; }
+  .offer-list .offer .offer-visual { order: -1; }
+  .offer h3 { font-size: 1.375rem; }
+  .offer-text { gap: .7rem; }
+  .offer-text > p { font-size: .9375rem; }
+  .caps-chips { gap: .35rem; }
+  .caps-chips li { font-size: .75rem; padding: .4rem .6rem; background: var(--ivory); }
+  .mb-view { height: 168px; }
+  .mock-dash { height: 208px; grid-template-columns: 48px minmax(0, 1fr); }
+  .md-chart { height: 56px; }
+  .mock-phones { padding-block: .25rem; }
+  .phone2 { width: 104px; height: 204px; border-radius: 16px; }
+  .phone2 .ph-body i.big { height: 38px; }
+  .offer-cta { margin-top: 1.5rem; padding-top: 0; border-top: 0; }
+  .offer-cta p { display: none; }
+  .offer-cta .btn { width: 100%; justify-content: center; }
+
+  /* product perspective: titles first, details on tap */
+  .pm-layout { gap: 1.75rem; margin-top: 2rem; }
+  .pm-board { position: static; padding: .8rem; }
+  .pm-cols { gap: .4rem; }
+  .pm-col { min-height: 0; padding: .5rem .4rem; gap: .4rem; }
+  .pm-col h4 { font-size: .625rem; }
+  .pm-card { font-size: .75rem; padding: .45rem .5rem; }
+  .pm-item summary .pm-desc { display: none; }
+  .pm-desc-m { display: block; color: var(--band-muted); font-size: .9375rem; }
+  .pm-item summary h3 { font-size: 1.3rem; }
+  .pm-toggle { width: 34px; height: 34px; }
+  .pm-close { margin-top: 2.5rem; }
+
+  /* approach as swipeable step cards */
+  .steps { grid-auto-columns: 82%; margin-top: 2rem; row-gap: 0; }
+  .step { padding: 1.1rem; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; gap: .7rem; }
+  .step-num { font-size: 2.6rem; }
+  .steps .step .step-track::before, .steps .step .step-track .fill { right: 0; }
+
+  /* about: the diagram says what the second paragraph says */
+  .about-more { display: none; }
+  .dots { margin-top: 1.5rem; }
+
+  form.enquiry, .contact-intro, .sent { padding: 1.25rem; }
+  .contact { padding-block: 3.75rem 3rem; }
+
+  /* sticky enquiry button */
+  .m-cta {
+    display: inline-flex; justify-content: center; position: fixed; z-index: 45;
+    left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 12px 30px -10px rgba(43, 24, 40, .55);
+    transform: translateY(calc(100% + 30px)); transition: transform .4s var(--ease), background-color .25s var(--ease);
+  }
+  .m-cta.show { transform: none; }
+  .site-footer { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); }
+}
+
 /* ===== MOTION (everything above is the visible resting state) ===== */
 @media (prefers-reduced-motion: no-preference) {
   .pulse::after { animation: ping 2.4s var(--ease) infinite; }
@@ -688,7 +783,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
           <p>I help turn complex ideas, content and workflows into clear, considered digital experiences.</p>
         </div>
 
-        <div class="offer-list">
+        <div class="offer-list" id="offer-list" data-carousel>
           <article class="offer">
             <div class="offer-text">
               <h3>Websites with a <span class="serif">clear purpose</span></h3>
@@ -780,6 +875,8 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
             </div>
           </article>
         </div>
+
+        <div class="car-dots" data-for="offer-list" aria-hidden="true"></div>
 
         <div class="offer-cta">
           <p>Not sure which of these fits? That’s a good place to start a conversation.</p>
@@ -892,7 +989,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
         <span class="approach-bar"><i id="approach-bar"></i></span>
         <span>Keep scrolling</span>
       </div>
-      <ol class="steps">
+      <ol class="steps" id="steps" data-carousel>
         <li class="step">
           <span class="step-num" aria-hidden="true">01</span>
           <span class="step-track" aria-hidden="true"><span class="fill"></span></span>
@@ -926,6 +1023,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
           <div class="step-out"><span>Output</span><b>Design carried through to delivery</b></div>
         </li>
       </ol>
+      <div class="car-dots" data-for="steps" aria-hidden="true"></div>
     </div>
     </div>
    </div>
@@ -952,7 +1050,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
         </div>
         <div class="about-copy">
           <p>I’m a Product Manager building an independent design practice. I enjoy turning complex ideas, content and workflows into experiences that are easier to understand and use.</p>
-          <p>My background in computer science and experience working with product and engineering teams help me connect visual decisions with business context and how things will be built.</p>
+          <p class="about-more">My background in computer science and experience working with product and engineering teams help me connect visual decisions with business context and how things will be built.</p>
           <ul class="facts">
             <li><span>Role</span>Product Manager, building an independent design practice</li>
             <li><span>Background</span>Computer science</li>
@@ -1038,6 +1136,8 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
     </div>
   </section>
 </main>
+
+<a class="btn m-cta" id="m-cta" href="#contact" aria-hidden="true" tabindex="-1">Let’s talk <span class="arrow" aria-hidden="true">→</span></a>
 
 <footer class="site-footer">
   <div class="wrap">
@@ -1208,6 +1308,45 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
   window.addEventListener("resize", function () { if (pinned) updateApproach(); });
   if (pinQuery.addEventListener) pinQuery.addEventListener("change", function (e) { setPinned(e.matches); });
   setPinned(pinQuery.matches);
+
+  // ---- Phones: swipe dots, tap-to-read details, sticky enquiry button ----
+  document.querySelectorAll(".car-dots[data-for]").forEach(function (dots) {
+    var row = document.getElementById(dots.getAttribute("data-for"));
+    var items = Array.prototype.slice.call(row.children);
+    items.forEach(function () { dots.appendChild(document.createElement("i")); });
+    var marks = Array.prototype.slice.call(dots.children);
+    function sync() {
+      var step = items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : 1;
+      var idx = Math.max(0, Math.min(items.length - 1, Math.round(row.scrollLeft / (step || 1))));
+      marks.forEach(function (m, i) { m.classList.toggle("on", i === idx); });
+    }
+    row.addEventListener("scroll", function () { requestAnimationFrame(sync); }, { passive: true });
+    sync();
+  });
+
+  document.querySelectorAll(".pm-item").forEach(function (item) {
+    var desc = item.querySelector(".pm-desc");
+    var body = item.querySelector(".pm-body");
+    if (!desc || !body) return;
+    var p = document.createElement("p");
+    p.className = "pm-desc-m";
+    p.textContent = desc.textContent;
+    body.insertBefore(p, body.firstChild);
+  });
+
+  var mCta = document.getElementById("m-cta");
+  if (mCta && "IntersectionObserver" in window) {
+    var seen = { top: true, contact: false };
+    var ctaObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { seen[en.target.id] = en.isIntersecting; });
+      var show = !seen.top && !seen.contact;
+      mCta.classList.toggle("show", show);
+      mCta.setAttribute("aria-hidden", String(!show));
+      mCta.tabIndex = show ? 0 : -1;
+    }, { threshold: 0 });
+    ctaObs.observe(document.getElementById("top"));
+    ctaObs.observe(document.getElementById("contact"));
+  }
 
   // ---- Copy helpers ----
   function copy(text, statusEl, okMsg, fallbackEl) {
