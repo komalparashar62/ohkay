@@ -1,0 +1,8 @@
+{
+  "name": "komal-portfolio",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  }
+}
