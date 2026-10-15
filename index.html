@@ -39,7 +39,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 88px; -webkit-text-size-adjust: 100%; }
-body { background: var(--ivory); color: var(--plum); font-family: var(--f-body); font-size: var(--s-body); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+body { background: var(--ivory); color: var(--plum); font-family: var(--f-body); font-size: var(--s-body); line-height: 1.6; overflow-x: hidden; overflow-x: clip; -webkit-font-smoothing: antialiased; }
 h1, h2, h3, h4 { margin: 0; font-family: var(--f-display); font-weight: 600; letter-spacing: -.02em; line-height: 1.02; text-wrap: balance; }
 p { margin: 0; } ul, ol { margin: 0; padding: 0; list-style: none; } a { color: inherit; }
 .serif { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
@@ -386,15 +386,14 @@ p { margin: 0; } ul, ol { margin: 0; padding: 0; list-style: none; } a { color: 
 /* Pinned approach: the section holds still while scrolling moves through the four steps.
    Only on large screens with motion allowed; everywhere else it is the normal stacked section above. */
 .approach-meta { display: none; }
-.approach.is-pinned { padding-block: 0; }
-.approach.is-pinned .approach-pin { height: 340vh; }
+.approach.is-pinned { padding-bottom: 0; }
+.approach.is-pinned .approach-pin { height: 300vh; margin-top: clamp(.5rem, 2vh, 1.5rem); }
 .approach.is-pinned .approach-sticky {
   position: sticky; top: calc(var(--head-h) + env(safe-area-inset-top, 0px));
   height: calc(100vh - var(--head-h) - env(safe-area-inset-top, 0px));
   display: flex; flex-direction: column; justify-content: center; gap: clamp(1.5rem, 4vh, 3rem);
   padding-block: clamp(1rem, 3vh, 2rem);
 }
-.approach.is-pinned .section-head h2 { font-size: clamp(2.25rem, 1rem + 3.4vw, 4rem); }
 .approach.is-pinned .steps { margin-top: 0; }
 .approach.is-pinned .step { gap: .7rem; }
 .approach.is-pinned .step-num { font-size: clamp(2.5rem, 1.5rem + 2vw, 3.5rem); }
@@ -408,6 +407,34 @@ p { margin: 0; } ul, ol { margin: 0; padding: 0; list-style: none; } a { color: 
 .approach-meta b { color: var(--plum); font-weight: 500; }
 .approach-bar { flex: 1; max-width: 240px; height: 2px; background: var(--line-strong); position: relative; overflow: hidden; }
 .approach-bar i { position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: left; }
+@media (max-height: 700px) {
+  .approach.is-pinned .step-out-vis { display: none; }
+  .approach.is-pinned .step-num { font-size: 2.4rem; }
+}
+
+/* Pinned hero canvas: scrolling moves Brief → Flow → Interface (large screens, motion allowed) */
+.canvas-hint { display: none; }
+.canvas-pin.is-pinned { height: 270vh; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+.canvas-pin.is-pinned .canvas-sticky { position: sticky; top: calc(var(--head-h) + env(safe-area-inset-top, 0px) + 16px); }
+.canvas-pin.is-pinned .canvas-stage { margin-top: 0; height: calc(100vh - var(--head-h) - env(safe-area-inset-top, 0px) - 32px); max-height: 760px; display: flex; flex-direction: column; }
+.canvas-pin.is-pinned .canvas-area { flex: 1; min-height: 0; }
+.canvas-pin.is-pinned .canvas-play { display: none; }
+.canvas-pin.is-pinned .canvas-hint { display: inline-flex; font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--plum-2); margin-right: .25rem; }
+.canvas-pin.is-pinned .canvas-progress { transition: transform .15s linear; }
+
+/* Stacked design cards: each card pins and the next one slides over it */
+.offer-list.is-stacked { gap: 0; border-top: 0; padding-top: 0; padding-bottom: 12vh; }
+.offer-list.is-stacked .offer {
+  position: sticky; top: calc(var(--head-h) + env(safe-area-inset-top, 0px) + 20px + var(--i, 0) * 22px);
+  background: var(--paper); border: 1px solid var(--line); border-radius: 22px;
+  padding: clamp(1.5rem, 3vw, 2.5rem); margin-bottom: 24vh;
+  box-shadow: 0 30px 60px -40px rgba(43, 24, 40, .45);
+  transform-origin: 50% 0; transform: scale(calc(1 - var(--cover, 0) * .05));
+}
+.offer-list.is-stacked .offer:last-child { margin-bottom: 0; }
+.offer-list.is-stacked .offer > * { opacity: calc(1 - var(--cover, 0) * .55); }
+.offer-list.is-stacked .caps-chips { gap: .4rem; }
+.offer-list.is-stacked .caps-chips li { font-size: .78rem; padding: .42rem .7rem; }
 
 /* ===== ABOUT ===== */
 .about { border-top: 1px solid var(--line); }
@@ -719,10 +746,12 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
         </div>
       </div>
 
+      <div class="canvas-pin" id="canvas-pin"><div class="canvas-sticky">
       <figure class="canvas-stage" id="canvas">
         <div class="canvas-top">
           <span class="tag">Illustrative composition, not client work</span>
           <div class="canvas-controls">
+            <span class="canvas-hint" aria-hidden="true">Scroll ↓</span>
             <div class="canvas-tabs" role="tablist" aria-label="From idea to interface">
               <button class="canvas-tab" type="button" role="tab" id="tab-brief" aria-controls="pane-brief" aria-selected="true" tabindex="0" data-stage="0">Brief</button>
               <button class="canvas-tab" type="button" role="tab" id="tab-flow" aria-controls="pane-flow" aria-selected="false" tabindex="-1" data-stage="1">Flow</button>
@@ -789,6 +818,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
           <span class="eq-item" data-stage="2"><i>Interface</i>Design craft</span>
         </figcaption>
       </figure>
+      </div></div>
     </div>
   </section>
 
@@ -822,7 +852,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
         </div>
 
         <div class="offer-list" id="offer-list" data-carousel>
-          <article class="offer">
+          <article class="offer" style="--i:0">
             <div class="offer-text">
               <h3>Websites with a <span class="serif">clear purpose</span></h3>
               <p>From a focused landing page to a website explaining a complex business, I create experiences that help visitors understand your offering and take the next step.</p>
@@ -849,7 +879,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
             </div>
           </article>
 
-          <article class="offer">
+          <article class="offer" style="--i:1">
             <div class="offer-text">
               <h3>Products that <span class="serif">feel intuitive</span></h3>
               <p>I design interfaces around the tasks people need to complete, helping make digital products, dashboards and business tools easier to understand and use.</p>
@@ -883,7 +913,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
             </div>
           </article>
 
-          <article class="offer">
+          <article class="offer" style="--i:2">
             <div class="offer-text">
               <h3>Ideas you can <span class="serif">interact with</span></h3>
               <p>I turn early ideas into wireframes and interactive prototypes so we can explore the experience, discuss decisions and refine the direction before development.</p>
@@ -1012,8 +1042,6 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
 
   <!-- APPROACH -->
   <section class="section approach" id="approach" aria-labelledby="approach-title">
-   <div class="approach-pin" id="approach-pin">
-    <div class="approach-sticky">
     <div class="wrap section-grid">
       <div class="rail"><p class="eyebrow">My approach</p></div>
       <div class="section-head">
@@ -1021,6 +1049,8 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
         <p>Each project is different. We’ll shape the scope together, with clear decisions and useful outputs along the way.</p>
       </div>
     </div>
+   <div class="approach-pin" id="approach-pin">
+    <div class="approach-sticky">
     <div class="wrap" style="display:grid;gap:clamp(1rem,3vh,1.75rem)">
       <div class="approach-meta" aria-hidden="true">
         <span>Step <b id="approach-count">1</b> of 4</span>
@@ -1285,15 +1315,48 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
     if (p) timer = setInterval(tick, STAGE_MS);
     restartProgress();
   }
+  // Large screens with motion allowed: scroll drives the stages instead of a timer.
+  var pinQuery = window.matchMedia("(min-width: 961px) and (min-height: 600px) and (prefers-reduced-motion: no-preference)");
+  var canvasPin = document.getElementById("canvas-pin");
+  var canvasSticky = canvasPin.firstElementChild;
+  var heroPinned = false;
+  function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function heroMetrics() {
+    var r = canvasPin.getBoundingClientRect();
+    var stickTop = parseFloat(getComputedStyle(canvasSticky).top) || 0;
+    var travel = Math.max(1, r.height - canvasSticky.offsetHeight);
+    return { r: r, stickTop: stickTop, travel: travel, p: clamp01((stickTop - r.top) / travel) };
+  }
+  function updateHero() {
+    if (!heroPinned) return;
+    var m = heroMetrics();
+    var i = Math.min(2, Math.floor(m.p * 3));
+    if (i !== current) show(i);
+    progress.style.transform = "scaleX(" + m.p.toFixed(3) + ")";
+  }
+  function goToStage(i, focusTab) {
+    if (!heroPinned) { setPlaying(false); show(i, focusTab); return; }
+    var m = heroMetrics();
+    var y = window.scrollY + m.r.top - m.stickTop + m.travel * ((i + 0.15) / 3);
+    window.scrollTo({ top: y, behavior: "smooth" });
+    show(i, focusTab);
+  }
+  function setHeroPinned(on) {
+    heroPinned = on;
+    canvasPin.classList.toggle("is-pinned", on);
+    if (on) { setPlaying(false); } else { progress.style.transform = ""; setPlaying(!reduce); }
+    updateHero();
+  }
+
   tabs.forEach(function (t, idx) {
-    t.addEventListener("click", function () { setPlaying(false); show(idx); });
+    t.addEventListener("click", function () { goToStage(idx); });
     t.addEventListener("keydown", function (e) {
       var n = null;
       if (e.key === "ArrowRight") n = (idx + 1) % 3;
       if (e.key === "ArrowLeft") n = (idx + 2) % 3;
       if (e.key === "Home") n = 0;
       if (e.key === "End") n = 2;
-      if (n !== null) { e.preventDefault(); setPlaying(false); show(n, true); }
+      if (n !== null) { e.preventDefault(); goToStage(n, true); }
     });
   });
   playBtn.addEventListener("click", function () { setPlaying(!playing); });
@@ -1305,6 +1368,34 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
   window.addEventListener("resize", function () { aim(current); });
   show(0);
   setPlaying(playing);
+  setHeroPinned(pinQuery.matches);
+
+  // ---- Design expertise: cards stack as you scroll ----
+  var offerList = document.getElementById("offer-list");
+  var offers = Array.prototype.slice.call(offerList.children);
+  var stackQuery = window.matchMedia("(min-width: 961px) and (min-height: 680px) and (prefers-reduced-motion: no-preference)");
+  var stacked = false;
+  function updateStack() {
+    if (!stacked) return;
+    offers.forEach(function (o, i) {
+      var next = offers[i + 1];
+      if (!next) { o.style.setProperty("--cover", "0"); return; }
+      var gap = next.getBoundingClientRect().top - o.getBoundingClientRect().top;
+      o.style.setProperty("--cover", clamp01(1 - gap / o.offsetHeight).toFixed(3));
+    });
+  }
+  function setStacked(on) {
+    stacked = on;
+    offerList.classList.toggle("is-stacked", on);
+    if (!on) offers.forEach(function (o) { o.style.removeProperty("--cover"); });
+    updateStack();
+  }
+  setStacked(stackQuery.matches);
+
+  window.addEventListener("scroll", function () { updateHero(); updateStack(); }, { passive: true });
+  window.addEventListener("resize", function () { updateHero(); updateStack(); });
+  if (pinQuery.addEventListener) pinQuery.addEventListener("change", function (e) { setHeroPinned(e.matches); });
+  if (stackQuery.addEventListener) stackQuery.addEventListener("change", function (e) { setStacked(e.matches); });
 
   // ---- Play section entrances once they come into view (content is visible before this runs) ----
   if (!reduce && "IntersectionObserver" in window) {
@@ -1324,16 +1415,15 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
   var aFills = aSteps.map(function (s) { return s.querySelector(".fill"); });
   var aCount = document.getElementById("approach-count");
   var aBar = document.getElementById("approach-bar");
-  var pinQuery = window.matchMedia("(min-width: 961px) and (min-height: 760px) and (prefers-reduced-motion: no-preference)");
+  var aSticky = pin.firstElementChild;
   var pinned = false, ticking = false;
-  function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
   function updateApproach() {
     ticking = false;
     if (!pinned) return;
-    var head = header.getBoundingClientRect().bottom;
     var r = pin.getBoundingClientRect();
-    var travel = r.height - (window.innerHeight - head);
-    var p = clamp01((head - r.top) / travel);
+    var stickTop = parseFloat(getComputedStyle(aSticky).top) || 0;
+    var travel = Math.max(1, r.height - aSticky.offsetHeight);
+    var p = clamp01((stickTop - r.top) / travel);
     var seg = p * 4.4;                 // a little extra so step 4 rests fully filled before the page moves on
     var cur = Math.min(3, Math.floor(seg));
     aSteps.forEach(function (s, i) {
@@ -1354,7 +1444,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--orange); box-sh
     }
     updateApproach();
   }
-  window.addEventListener("scroll", function () { if (pinned && !ticking) { ticking = true; requestAnimationFrame(updateApproach); } }, { passive: true });
+  window.addEventListener("scroll", function () { if (pinned) updateApproach(); }, { passive: true });
   window.addEventListener("resize", function () { if (pinned) updateApproach(); });
   if (pinQuery.addEventListener) pinQuery.addEventListener("change", function (e) { setPinned(e.matches); });
   setPinned(pinQuery.matches);
